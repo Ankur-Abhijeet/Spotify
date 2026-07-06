@@ -1,6 +1,6 @@
-# Deployment Guide: Personifier
+# Deployment Guide: Spotify
 
-This document outlines the step-by-step instructions to deploy the **Personifier Backend (NestJS)** to Render and the **Personifier Frontend (Next.js)** to Vercel.
+This document outlines the step-by-step instructions to deploy the **Spotify Backend (NestJS)** to Render and the **Spotify Frontend (Next.js)** to Vercel.
 
 ---
 
@@ -14,7 +14,7 @@ Render uses the `render.yaml` configuration at the root of the project to automa
 3. Click **New +** and select **Blueprint**.
 4. Connect your repository. Render will automatically detect the `render.yaml` file.
 5. In the blueprint setup, configure the following environment variables:
-   - `FRONTEND_URL`: Point this to your Vercel frontend domain (e.g. `https://personifier-web.vercel.app`).
+   - `FRONTEND_URL`: Point this to your Vercel frontend domain (e.g. `https://spotify-web.vercel.app`).
    - `JWT_SECRET`: A secure random string for encrypting access tokens.
    - `JWT_REFRESH_SECRET`: A secure random string for encrypting refresh tokens.
    - `DATABASE_URL`: Your production Postgres database connection string (e.g. from Render PostgreSQL or Supabase). If left blank, it will fall back to SQLite (though Render's filesystem is ephemeral, so a real database is recommended).
@@ -34,5 +34,5 @@ Vercel natively supports Next.js monorepo configurations.
    - **Framework Preset**: `Next.js`
    - **Root Directory**: Click *Edit* and select **`apps/web`**.
 4. Expand the **Environment Variables** section and add:
-   - `NEXT_PUBLIC_API_URL`: Your hosted Render backend URL (e.g. `https://personifier-api.onrender.com`).
+   - `NEXT_PUBLIC_API_URL`: Your hosted Render backend URL (e.g. `https://spotify-api.onrender.com`).
 5. Click **Deploy**. Vercel will automatically resolve workspace dependencies from the root monorepo structure and build the application successfully.

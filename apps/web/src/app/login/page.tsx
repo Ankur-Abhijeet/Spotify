@@ -45,7 +45,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md space-y-8 rounded-2xl bg-zinc-900 p-8 border border-zinc-800 shadow-2xl">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-white">
-            Log in to <span className="text-spotify">Personifier</span>
+            Log in to <span className="text-spotify">Spotify</span>
           </h2>
           <p className="mt-2 text-center text-sm text-muted">
             Or{' '}

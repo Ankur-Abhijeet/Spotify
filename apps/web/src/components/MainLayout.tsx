@@ -150,7 +150,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         },
         body: JSON.stringify({
           title: `My Playlist #${playlists.length + 1}`,
-          description: 'A custom playlist created in Personifier.',
+          description: 'A custom playlist created in Spotify.',
         }),
       });
 
@@ -285,7 +285,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             {/* Header */}
             <header className="flex items-center justify-between px-6 py-4 bg-zinc-900/50 backdrop-blur sticky top-0 z-10 border-b border-zinc-800/50">
               <div className="flex items-center gap-2">
-                <span className="text-lg font-bold tracking-tight text-spotify uppercase">Personifier</span>
+                <span className="text-lg font-bold tracking-tight text-spotify uppercase">Spotify</span>
               </div>
               <div className="flex items-center gap-4">
                 {isAuthenticated && user ? (

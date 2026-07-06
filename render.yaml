@@ -1,7 +1,7 @@
 services:
   # NestJS Monolith API on Render
   - type: web
-    name: personifier-api
+    name: spotify-api
     env: node
     plan: free
     buildCommand: npm install --include=dev && npm run build -w apps/api

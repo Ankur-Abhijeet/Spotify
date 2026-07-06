@@ -4,7 +4,7 @@ export function initDb(): Promise<IDBDatabase> {
       reject(new Error('IndexedDB is only available in the browser'));
       return;
     }
-    const request = indexedDB.open('personifier-offline', 1);
+    const request = indexedDB.open('spotify-offline', 1);
     request.onupgradeneeded = () => {
       const db = request.result;
       if (!db.objectStoreNames.contains('tracks')) {

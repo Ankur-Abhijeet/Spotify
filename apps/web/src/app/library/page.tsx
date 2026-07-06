@@ -69,7 +69,7 @@ export default function LibraryPage() {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
         <Heart className="h-16 w-16 text-zinc-600 mb-4" />
-        <h2 className="text-xl font-bold text-white mb-2">Enjoy your Library in Personifier</h2>
+        <h2 className="text-xl font-bold text-white mb-2">Enjoy your Library in Spotify</h2>
         <p className="text-sm text-muted mb-6 max-w-sm">
           Log in to view your liked songs, custom playlists, and follow artists.
         </p>

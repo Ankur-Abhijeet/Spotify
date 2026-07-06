@@ -50,7 +50,7 @@ export default function PremiumPage() {
     <div className="flex flex-col gap-8 pb-12 max-w-xl mx-auto text-white">
       <div className="text-center flex flex-col items-center gap-2">
         <Sparkles className="h-12 w-12 text-spotify animate-pulse" />
-        <h2 className="text-3xl font-black tracking-tight">Personifier Premium</h2>
+        <h2 className="text-3xl font-black tracking-tight">Spotify Premium</h2>
         <p className="text-sm text-muted">Unlock ad-free streaming, high-fidelity audio, and unlimited downloads</p>
       </div>
 

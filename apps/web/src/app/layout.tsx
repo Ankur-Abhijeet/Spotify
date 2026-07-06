@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Personifier",
-  description: "A Spotify Clone with Adaptive Discovery",
+  title: "Spotify",
+  description: "Spotify Clone with Adaptive Discovery",
 };
 
 export default function RootLayout({

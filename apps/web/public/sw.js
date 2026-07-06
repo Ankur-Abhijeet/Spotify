@@ -1,4 +1,4 @@
-const CACHE_NAME = 'personifier-v1';
+const CACHE_NAME = 'spotify-v1';
 const ASSETS_TO_CACHE = [
   '/',
   '/favicon.ico',
