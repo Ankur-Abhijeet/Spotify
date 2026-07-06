@@ -24,6 +24,11 @@ export default function RecapPage() {
   const [generatingMixes, setGeneratingMixes] = useState(false);
   const [mixesResult, setMixesResult] = useState<string | null>(null);
 
+  const getSafeAccessToken = () => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('access_token');
+  };
+
   useEffect(() => {
     if (!isAuthenticated) {
       router.push('/login');
@@ -32,7 +37,8 @@ export default function RecapPage() {
 
     const fetchStats = async () => {
       try {
-        const token = localStorage.getItem('access_token');
+        const token = getSafeAccessToken();
+        if (!token) return;
         const res = await fetch(`${API_BASE}/discovery/recap`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -54,7 +60,8 @@ export default function RecapPage() {
     setGeneratingMixes(true);
     setMixesResult(null);
     try {
-      const token = localStorage.getItem('access_token');
+      const token = getSafeAccessToken();
+      if (!token) return;
       const res = await fetch(`${API_BASE}/discovery/mixes/generate`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
@@ -63,11 +70,11 @@ export default function RecapPage() {
         const data = await res.json();
         setMixesResult(`Successfully generated personalized mixes! Check your Library.`);
       } else {
-        setMixesResult('Failed to generate personalized mixes.');
+        setMixesResult(`Failed to generate personalized mixes.`);
       }
     } catch (err) {
       console.error('Failed generating mixes', err);
-      setMixesResult('Error generating mixes.');
+      setMixesResult(`Error generating mixes.`);
     } finally {
       setGeneratingMixes(false);
     }

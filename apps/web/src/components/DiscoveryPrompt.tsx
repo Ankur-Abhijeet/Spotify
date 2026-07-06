@@ -41,6 +41,11 @@ export function DiscoveryPrompt({
   const audioARef = useRef<HTMLAudioElement | null>(null);
   const audioBRef = useRef<HTMLAudioElement | null>(null);
 
+  const getSafeAccessToken = () => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('access_token');
+  };
+
   const handleChoice = React.useCallback(async (chosenTrackId?: string) => {
     // Flush current hover timings
     if (previewStartRef.current) {
@@ -53,11 +58,16 @@ export function DiscoveryPrompt({
 
     // Call choice endpoint
     try {
+      const token = getSafeAccessToken();
+      if (!token) {
+        onResolve(chosenTrackId);
+        return;
+      }
       const res = await fetch(`${API_BASE}/discovery/choice`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           sessionId,

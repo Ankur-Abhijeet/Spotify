@@ -402,11 +402,16 @@ export const usePlayer = create<PlayerState>((set, get) => {
         set({ sessionId: sid });
       }
 
+      const getSafeToken = () => {
+        if (typeof window === 'undefined') return null;
+        return localStorage.getItem('access_token');
+      };
+
       try {
-        const token = localStorage.getItem('access_token');
+        const token = getSafeToken();
         let showPrompt = force;
 
-        if (!showPrompt) {
+        if (!showPrompt && token) {
           const res = await fetch(`${API_BASE}/discovery/should-prompt?sessionId=${sid}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
@@ -425,15 +430,17 @@ export const usePlayer = create<PlayerState>((set, get) => {
           set({ isPlaying: false, playChoiceImmediately: playImmediately });
 
           // Fetch pair
-          const pairRes = await fetch(`${API_BASE}/discovery/pair`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          if (pairRes.ok) {
-            const pair = await pairRes.json();
-            set({
-              discoveryPair: { candidateA: pair.candidateA, candidateB: pair.candidateB },
-              showDiscoveryPrompt: true,
+          if (token) {
+            const pairRes = await fetch(`${API_BASE}/discovery/pair`, {
+              headers: { Authorization: `Bearer ${token}` },
             });
+            if (pairRes.ok) {
+              const pair = await pairRes.json();
+              set({
+                discoveryPair: { candidateA: pair.candidateA, candidateB: pair.candidateB },
+                showDiscoveryPrompt: true,
+              });
+            }
           }
         }
       } catch (err) {

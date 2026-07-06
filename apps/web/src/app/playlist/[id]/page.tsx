@@ -33,10 +33,17 @@ export default function PlaylistPage({ params }: { params: Promise<{ id: string 
   const [downloadProgress, setDownloadProgress] = useState('');
   const router = useRouter();
 
+  const getSafeAccessToken = () => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('access_token');
+  };
+
   const fetchPlaylist = async () => {
     try {
+      const token = getSafeAccessToken();
+      if (!token) return;
       const res = await fetch(`${API_BASE}/library/playlists/${id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
         const data = await res.json();
@@ -134,11 +141,13 @@ export default function PlaylistPage({ params }: { params: Promise<{ id: string 
 
   const handleAddTrack = async (trackId: string) => {
     try {
+      const token = getSafeAccessToken();
+      if (!token) return;
       const res = await fetch(`${API_BASE}/library/playlists/${id}/tracks`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ trackId }),
       });
@@ -154,9 +163,11 @@ export default function PlaylistPage({ params }: { params: Promise<{ id: string 
 
   const handleRemoveTrack = async (trackId: string) => {
     try {
+      const token = getSafeAccessToken();
+      if (!token) return;
       const res = await fetch(`${API_BASE}/library/playlists/${id}/tracks/${trackId}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
         const updated = await res.json();
@@ -182,11 +193,13 @@ export default function PlaylistPage({ params }: { params: Promise<{ id: string 
     const orderedTrackIds = tracks.map((t) => t.id);
 
     try {
+      const token = getSafeAccessToken();
+      if (!token) return;
       const res = await fetch(`${API_BASE}/library/playlists/${id}/tracks/reorder`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ orderedTrackIds }),
       });

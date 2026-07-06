@@ -31,13 +31,25 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     initPlayer();
   }, [initAuth, initPlayer]);
 
+  const getSafeItem = (key: string) => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem(key);
+  };
+
+  const setSafeItem = (key: string, value: string) => {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem(key, value);
+  };
+
   // Load user playlists if authenticated
   useEffect(() => {
     if (isAuthenticated && user) {
       const fetchPlaylists = async () => {
         try {
+          const token = getSafeItem('access_token');
+          if (!token) return;
           const res = await fetch(`${API_BASE}/library`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+            headers: { Authorization: `Bearer ${token}` },
           });
           if (res.ok) {
             const data = await res.json();
@@ -57,10 +69,10 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    let deviceId = localStorage.getItem('connect_device_id');
+    let deviceId = getSafeItem('connect_device_id');
     if (!deviceId) {
       deviceId = Math.random().toString(36).substring(7);
-      localStorage.setItem('connect_device_id', deviceId);
+      setSafeItem('connect_device_id', deviceId);
     }
     const deviceName = `Web Player (Browser)`;
 
@@ -72,7 +84,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       const togglePlay = playerState.togglePlay;
       
       try {
-        const token = localStorage.getItem('access_token');
+        const token = getSafeItem('access_token');
+        if (!token) return;
         const res = await fetch(`${API_BASE}/connect/register`, {
           method: 'POST',
           headers: {
@@ -117,7 +130,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
     const fetchActivity = async () => {
       try {
-        const token = localStorage.getItem('access_token');
+        const token = getSafeItem('access_token');
+        if (!token) return;
         const res = await fetch(`${API_BASE}/social/friend-activity`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -142,11 +156,13 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     }
 
     try {
+      const token = getSafeItem('access_token');
+      if (!token) return;
       const res = await fetch(`${API_BASE}/library/playlists`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           title: `My Playlist #${playlists.length + 1}`,

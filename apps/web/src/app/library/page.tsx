@@ -23,12 +23,19 @@ export default function LibraryPage() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  const getSafeAccessToken = () => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('access_token');
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
       const fetchLibrary = async () => {
         try {
+          const token = getSafeAccessToken();
+          if (!token) return;
           const res = await fetch(`${API_BASE}/library`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+            headers: { Authorization: `Bearer ${token}` },
           });
           if (res.ok) {
             const data = await res.json();

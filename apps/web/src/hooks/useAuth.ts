@@ -79,9 +79,11 @@ export const useAuth = create<AuthState>((set, get) => ({
       }
 
       const data = await res.json();
-      localStorage.setItem('access_token', data.accessToken);
-      localStorage.setItem('refresh_token', data.refreshToken);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('access_token', data.accessToken);
+        localStorage.setItem('refresh_token', data.refreshToken);
+        localStorage.setItem('user', JSON.stringify(data.user));
+      }
 
       set({
         user: data.user,
@@ -110,9 +112,11 @@ export const useAuth = create<AuthState>((set, get) => ({
       }
 
       const data = await res.json();
-      localStorage.setItem('access_token', data.accessToken);
-      localStorage.setItem('refresh_token', data.refreshToken);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('access_token', data.accessToken);
+        localStorage.setItem('refresh_token', data.refreshToken);
+        localStorage.setItem('user', JSON.stringify(data.user));
+      }
 
       set({
         user: data.user,
@@ -127,9 +131,11 @@ export const useAuth = create<AuthState>((set, get) => ({
   },
 
   logout: () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('user');
+    }
     set({
       user: null,
       accessToken: null,

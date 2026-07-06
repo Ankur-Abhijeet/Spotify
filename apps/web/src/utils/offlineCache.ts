@@ -1,7 +1,7 @@
-export function initDb(): Promise<IDBDatabase> {
-  return new Promise((resolve, reject) => {
+export function initDb(): Promise<IDBDatabase | null> {
+  return new Promise((resolve) => {
     if (typeof window === 'undefined') {
-      reject(new Error('IndexedDB is only available in the browser'));
+      resolve(null);
       return;
     }
     const request = indexedDB.open('spotify-offline', 1);
@@ -12,12 +12,13 @@ export function initDb(): Promise<IDBDatabase> {
       }
     };
     request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
+    request.onerror = () => resolve(null);
   });
 }
 
 export async function cacheTrack(trackId: string, audioUrl: string): Promise<void> {
   const db = await initDb();
+  if (!db) return;
   // Fetch the audio content as a blob
   const res = await fetch(audioUrl);
   if (!res.ok) throw new Error('Failed to fetch audio stream');
@@ -35,7 +36,8 @@ export async function cacheTrack(trackId: string, audioUrl: string): Promise<voi
 
 export async function getCachedTrackUrl(trackId: string): Promise<string | null> {
   const db = await initDb();
-  return new Promise((resolve, reject) => {
+  if (!db) return null;
+  return new Promise((resolve) => {
     const transaction = db.transaction('tracks', 'readonly');
     const store = transaction.objectStore('tracks');
     const request = store.get(trackId);
@@ -50,30 +52,32 @@ export async function getCachedTrackUrl(trackId: string): Promise<string | null>
         resolve(null);
       }
     };
-    request.onerror = () => reject(request.error);
+    request.onerror = () => resolve(null);
   });
 }
 
 export async function isTrackCached(trackId: string): Promise<boolean> {
   const db = await initDb();
-  return new Promise((resolve, reject) => {
+  if (!db) return false;
+  return new Promise((resolve) => {
     const transaction = db.transaction('tracks', 'readonly');
     const store = transaction.objectStore('tracks');
     const request = store.getKey(trackId);
 
     request.onsuccess = () => resolve(request.result !== undefined);
-    request.onerror = () => reject(request.error);
+    request.onerror = () => resolve(false);
   });
 }
 
 export async function deleteCachedTrack(trackId: string): Promise<void> {
   const db = await initDb();
-  return new Promise((resolve, reject) => {
+  if (!db) return;
+  return new Promise((resolve) => {
     const transaction = db.transaction('tracks', 'readwrite');
     const store = transaction.objectStore('tracks');
     const request = store.delete(trackId);
 
     request.onsuccess = () => resolve();
-    request.onerror = () => reject(request.error);
+    request.onerror = () => resolve();
   });
 }

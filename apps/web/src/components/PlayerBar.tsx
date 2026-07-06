@@ -55,12 +55,19 @@ export function PlayerBar() {
   }, []);
 
   // Check if track is liked when currentTrack changes
+  const getSafeAccessToken = () => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('access_token');
+  };
+
   useEffect(() => {
     if (isAuthenticated && currentTrack) {
       const checkLiked = async () => {
         try {
+          const token = getSafeAccessToken();
+          if (!token) return;
           const res = await fetch(`${API_BASE}/library`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+            headers: { Authorization: `Bearer ${token}` },
           });
           if (res.ok) {
             const data = await res.json();
@@ -79,10 +86,12 @@ export function PlayerBar() {
     if (!isAuthenticated || !currentTrack) return;
 
     try {
+      const token = getSafeAccessToken();
+      if (!token) return;
       const method = isLiked ? 'DELETE' : 'POST';
       const res = await fetch(`${API_BASE}/library/like/${currentTrack.id}`, {
         method,
-        headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (res.ok) {
